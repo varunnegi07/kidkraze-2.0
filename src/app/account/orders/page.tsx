@@ -10,7 +10,8 @@ const SHEETDB_URL = 'https://sheetdb.io/api/v1/h402yhgh1iblo';
 interface SheetOrder {
   'Order ID': string;
   Date: string;
-  'Customer Name': string;
+  Customer: string;
+  Name: string;
   Email: string;
   Phone: string;
   Address: string;
@@ -18,7 +19,7 @@ interface SheetOrder {
   State: string;
   Pincode: string;
   Items: string;
-  Total: number;
+  Total: string | number;
   'Payment Method': string;
   'Payment Status': string;
   'Razorpay Payment ID': string;
@@ -127,11 +128,11 @@ export default function OrdersPage() {
                     <div>
                       <p className="font-mono font-semibold text-dark-900">{order['Order ID']}</p>
                       <p className="text-dark-500 text-sm">
-                        {new Date(order.Date).toLocaleDateString('en-IN', {
+                        {order.Date ? new Date(order.Date).toLocaleDateString('en-IN', {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric',
-                        })}
+                        }) : '-'}
                       </p>
                       <p className="text-dark-600 text-sm mt-1">{order.Items}</p>
                     </div>
@@ -203,7 +204,7 @@ export default function OrdersPage() {
                   <div className="flex items-start gap-2">
                     <MapPin className="w-4 h-4 text-primary-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">{selectedOrder['Customer Name']}</p>
+                      <p className="font-medium">{selectedOrder.Customer || selectedOrder.Name}</p>
                       <p className="text-dark-600 text-sm">{selectedOrder.Address}</p>
                       <p className="text-dark-600 text-sm">{selectedOrder.City}, {selectedOrder.State} - {selectedOrder.Pincode}</p>
                     </div>
@@ -240,13 +241,13 @@ export default function OrdersPage() {
               <div>
                 <p className="text-dark-500 text-sm">Order Date</p>
                 <p className="font-semibold">
-                  {new Date(selectedOrder.Date).toLocaleString('en-IN', {
+                  {selectedOrder.Date ? new Date(selectedOrder.Date).toLocaleString('en-IN', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
-                  })}
+                  }) : '-'}
                 </p>
               </div>
             </div>

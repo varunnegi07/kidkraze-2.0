@@ -38,7 +38,8 @@ export async function POST(request: NextRequest) {
         data: [{
           'Order ID': order.id,
           'Date': order.createdAt,
-          'Customer Name': order.customer.name,
+          'Customer': order.customer.name,
+          'Name': order.customer.name,
           'Email': order.customer.email,
           'Phone': order.customer.phone,
           'Address': order.customer.address,

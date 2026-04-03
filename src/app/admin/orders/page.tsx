@@ -1,19 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Download, Search, Filter, Package, Truck, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Download, Search, Filter, Package, XCircle } from 'lucide-react';
 
-interface Order {
-  id: string;
-  items: { productId: number; productName: string; quantity: number; price: number }[];
-  total: number;
-  customer: { name: string; email: string; phone: string; address: string; city: string; state: string; pincode: string };
-  paymentStatus: 'pending' | 'completed' | 'failed';
-  paymentMethod: 'razorpay' | 'cod';
-  razorpayPaymentId?: string;
-  createdAt: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+interface SheetOrder {
+  'Order ID': string;
+  Date: string;
+  Customer: string;
+  Name: string;
+  Email: string;
+  Phone: string;
+  Address: string;
+  City: string;
+  State: string;
+  Pincode: string;
+  Items: string;
+  Total: string | number;
+  'Payment Method': string;
+  'Payment Status': string;
+  'Razorpay Payment ID': string;
+  'Order Status': string;
 }
+
+const SHEETDB_URL = 'https://sheetdb.io/api/v1/h402yhgh1iblo';
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -30,11 +39,12 @@ const paymentStatusColors: Record<string, string> = {
 };
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<SheetOrder[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<SheetOrder | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -42,9 +52,9 @@ export default function AdminOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch(SHEETDB_URL, { cache: 'no-store' });
       const data = await res.json();
-      setOrders(data.orders || []);
+      setOrders((data || []).reverse());
     } catch (error) {
       console.error('Failed to fetch orders:', error);
     } finally {
@@ -52,46 +62,55 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: Order['status']) => {
+  const updateOrderStatus = async (orderId: string, status: string) => {
+    setUpdating(orderId);
     try {
-      await fetch(`/api/orders/${orderId}`, {
+      await fetch(`${SHEETDB_URL}/Order ID/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ data: { 'Order Status': status } }),
       });
       fetchOrders();
     } catch (error) {
       console.error('Failed to update order:', error);
+    } finally {
+      setUpdating(null);
     }
   };
 
   const filteredOrders = orders.filter(order => {
+    const total = String(order.Total || '');
     const matchesSearch =
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.phone.includes(searchTerm);
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+      String(order['Order ID'] || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.Customer || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.Email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.Phone || '').includes(searchTerm);
+    const matchesStatus = statusFilter === 'all' || order['Order Status'] === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
+  const totalRevenue = orders
+    .filter(o => o['Payment Status'] === 'completed')
+    .reduce((sum, o) => sum + Number(o.Total || 0), 0);
+
   const exportToCSV = () => {
-    const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Phone', 'Address', 'City', 'State', 'Pincode', 'Items', 'Total', 'Payment Method', 'Payment Status', 'Order Status'];
+    const headers = ['Order ID', 'Date', 'Customer', 'Email', 'Phone', 'Address', 'City', 'State', 'Pincode', 'Items', 'Total', 'Payment Method', 'Payment Status', 'Razorpay Payment ID', 'Order Status'];
     const rows = orders.map(order => [
-      order.id,
-      new Date(order.createdAt).toLocaleDateString(),
-      order.customer.name,
-      order.customer.email,
-      order.customer.phone,
-      order.customer.address,
-      order.customer.city,
-      order.customer.state,
-      order.customer.pincode,
-      order.items.map(i => `${i.productName} x${i.quantity}`).join('; '),
-      order.total,
-      order.paymentMethod,
-      order.paymentStatus,
-      order.status,
+      order['Order ID'],
+      order.Date,
+      order.Customer,
+      order.Email,
+      order.Phone,
+      order.Address,
+      order.City,
+      order.State,
+      order.Pincode,
+      order.Items,
+      order.Total,
+      order['Payment Method'],
+      order['Payment Status'],
+      order['Razorpay Payment ID'],
+      order['Order Status'],
     ]);
 
     const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
@@ -102,10 +121,6 @@ export default function AdminOrdersPage() {
     a.download = `kidkraze-orders-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   };
-
-  const totalRevenue = orders
-    .filter(o => o.paymentStatus === 'completed')
-    .reduce((sum, o) => sum + o.total, 0);
 
   if (loading) {
     return (
@@ -147,11 +162,11 @@ export default function AdminOrdersPage() {
         </div>
         <div className="card p-4">
           <p className="text-dark-500 text-sm">Pending</p>
-          <p className="text-2xl font-bold text-yellow-600">{orders.filter(o => o.status === 'pending').length}</p>
+          <p className="text-2xl font-bold text-yellow-600">{orders.filter(o => o['Order Status'] === 'pending').length}</p>
         </div>
         <div className="card p-4">
           <p className="text-dark-500 text-sm">Delivered</p>
-          <p className="text-2xl font-bold text-green-600">{orders.filter(o => o.status === 'delivered').length}</p>
+          <p className="text-2xl font-bold text-green-600">{orders.filter(o => o['Order Status'] === 'delivered').length}</p>
         </div>
       </div>
 
@@ -201,36 +216,35 @@ export default function AdminOrdersPage() {
             <tbody className="divide-y divide-dark-100">
               {filteredOrders.length > 0 ? (
                 filteredOrders.map(order => (
-                  <tr key={order.id} className="hover:bg-dark-50 transition-colors">
+                  <tr key={order['Order ID']} className="hover:bg-dark-50 transition-colors">
                     <td className="px-6 py-4">
                       <button
                         onClick={() => setSelectedOrder(order)}
                         className="font-mono text-primary-600 hover:text-primary-700 font-medium"
                       >
-                        {order.id}
+                        {order['Order ID']}
                       </button>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="font-medium text-dark-900">{order.customer.name}</p>
-                      <p className="text-dark-500 text-sm">{order.customer.phone}</p>
+                      <p className="font-medium text-dark-900">{order.Customer || order.Name}</p>
+                      <p className="text-dark-500 text-sm">{order.Phone}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-dark-600 text-sm">
-                        {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
-                      </p>
+                      <p className="text-dark-600 text-sm max-w-xs truncate">{order.Items}</p>
                     </td>
-                    <td className="px-6 py-4 font-semibold">₹{order.total}</td>
+                    <td className="px-6 py-4 font-semibold">₹{order.Total}</td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${paymentStatusColors[order.paymentStatus]}`}>
-                        {order.paymentStatus}
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${paymentStatusColors[order['Payment Status']] || 'bg-dark-100 text-dark-600'}`}>
+                        {order['Payment Status']}
                       </span>
-                      <p className="text-dark-500 text-xs mt-1 capitalize">{order.paymentMethod}</p>
+                      <p className="text-dark-500 text-xs mt-1 capitalize">{order['Payment Method']}</p>
                     </td>
                     <td className="px-6 py-4">
                       <select
-                        value={order.status}
-                        onChange={(e) => updateOrderStatus(order.id, e.target.value as Order['status'])}
-                        className={`px-2 py-1 rounded-full text-xs font-semibold border-0 cursor-pointer ${statusColors[order.status]}`}
+                        value={order['Order Status']}
+                        onChange={(e) => updateOrderStatus(order['Order ID'], e.target.value)}
+                        disabled={updating === order['Order ID']}
+                        className={`px-2 py-1 rounded-full text-xs font-semibold border-0 cursor-pointer ${statusColors[order['Order Status']] || 'bg-dark-100 text-dark-600'}`}
                       >
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
@@ -240,7 +254,7 @@ export default function AdminOrdersPage() {
                       </select>
                     </td>
                     <td className="px-6 py-4 text-dark-500 text-sm">
-                      {new Date(order.createdAt).toLocaleDateString()}
+                      {order.Date ? new Date(order.Date).toLocaleDateString() : '-'}
                     </td>
                     <td className="px-6 py-4">
                       <button
@@ -287,58 +301,51 @@ export default function AdminOrdersPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-dark-500 text-sm">Order ID</p>
-                  <p className="font-mono font-semibold">{selectedOrder.id}</p>
+                  <p className="font-mono font-semibold">{selectedOrder['Order ID']}</p>
                 </div>
                 <div>
                   <p className="text-dark-500 text-sm">Date</p>
-                  <p className="font-semibold">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                  <p className="font-semibold">{selectedOrder.Date ? new Date(selectedOrder.Date).toLocaleString() : '-'}</p>
                 </div>
               </div>
 
               <div>
                 <h3 className="font-semibold mb-2">Customer Details</h3>
                 <div className="bg-dark-50 p-4 rounded-xl space-y-1">
-                  <p className="font-medium">{selectedOrder.customer.name}</p>
-                  <p className="text-dark-600">{selectedOrder.customer.email}</p>
-                  <p className="text-dark-600">{selectedOrder.customer.phone}</p>
-                  <p className="text-dark-600">{selectedOrder.customer.address}</p>
-                  <p className="text-dark-600">{selectedOrder.customer.city}, {selectedOrder.customer.state} - {selectedOrder.customer.pincode}</p>
+                  <p className="font-medium">{selectedOrder.Customer || selectedOrder.Name}</p>
+                  <p className="text-dark-600">{selectedOrder.Email}</p>
+                  <p className="text-dark-600">{selectedOrder.Phone}</p>
+                  <p className="text-dark-600">{selectedOrder.Address}</p>
+                  <p className="text-dark-600">{selectedOrder.City}, {selectedOrder.State} - {selectedOrder.Pincode}</p>
                 </div>
               </div>
 
               <div>
                 <h3 className="font-semibold mb-2">Items</h3>
-                <div className="space-y-2">
-                  {selectedOrder.items.map((item, i) => (
-                    <div key={i} className="flex justify-between py-2 border-b border-dark-100 last:border-0">
-                      <span>{item.productName} x{item.quantity}</span>
-                      <span className="font-semibold">₹{item.price * item.quantity}</span>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-dark-600 bg-dark-50 p-4 rounded-xl">{selectedOrder.Items}</p>
                 <div className="flex justify-between pt-4 font-bold text-lg">
                   <span>Total</span>
-                  <span>₹{selectedOrder.total}</span>
+                  <span>₹{selectedOrder.Total}</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-dark-500 text-sm">Payment Method</p>
-                  <p className="font-semibold capitalize">{selectedOrder.paymentMethod}</p>
+                  <p className="font-semibold capitalize">{selectedOrder['Payment Method']}</p>
                 </div>
                 <div>
                   <p className="text-dark-500 text-sm">Payment Status</p>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${paymentStatusColors[selectedOrder.paymentStatus]}`}>
-                    {selectedOrder.paymentStatus}
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${paymentStatusColors[selectedOrder['Payment Status']] || 'bg-dark-100'}`}>
+                    {selectedOrder['Payment Status']}
                   </span>
                 </div>
               </div>
 
-              {selectedOrder.razorpayPaymentId && (
+              {selectedOrder['Razorpay Payment ID'] && (
                 <div>
                   <p className="text-dark-500 text-sm">Razorpay Payment ID</p>
-                  <p className="font-mono text-sm">{selectedOrder.razorpayPaymentId}</p>
+                  <p className="font-mono text-sm">{selectedOrder['Razorpay Payment ID']}</p>
                 </div>
               )}
             </div>
