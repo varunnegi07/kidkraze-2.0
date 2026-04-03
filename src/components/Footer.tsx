@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
-            <Link href="/" className="text-3xl font-black gradient-text mb-4 block">
-              KidKraze Mall
+            <Link href="/" className="mb-4 block">
+              <img src="/logo.png" alt="KidKraze" className="h-12 w-auto brightness-0 invert" />
             </Link>
             <p className="text-dark-400 mb-6">
               Fancy Stationery, Gifts, Novelties & School Books

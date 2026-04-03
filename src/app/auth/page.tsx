@@ -70,8 +70,7 @@ export default function AuthPage() {
 
         <div className="relative flex flex-col justify-center px-16 text-white">
           <div className="flex items-center gap-3 mb-8">
-            <Sparkles className="w-8 h-8 text-primary-400" />
-            <span className="text-3xl font-black">KidKraze</span>
+            <img src="/logo.png" alt="KidKraze" className="h-10 w-auto brightness-0 invert" />
           </div>
           <h2 className="text-4xl font-bold mb-6 leading-tight">
             {isSignUp ? 'Join the KidKraze Family' : 'Welcome Back!'}
@@ -103,7 +102,7 @@ export default function AuthPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-8">
-            <span className="text-3xl font-black gradient-text">KidKraze</span>
+            <img src="/logo.png" alt="KidKraze" className="h-10 w-auto" />
           </div>
 
           <div className="flex gap-1 p-1 bg-dark-100 rounded-xl mb-8">
