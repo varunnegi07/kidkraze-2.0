@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { CreditCard, Wallet, Truck, CheckCircle, Lock, Shield } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotalPrice, clearCart } = useCart();
+  const { user, isLoading } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,10 +23,26 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth');
+    }
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      }));
+    }
+  }, [user, isLoading, router]);
+
   const totalPrice = getTotalPrice();
   const shipping = totalPrice >= 499 ? 0 : 49;
   const finalTotal = totalPrice + shipping;
 
+  if (isLoading) return null;
+  if (!user) return null;
   if (items.length === 0) {
     router.push('/cart');
     return null;
