@@ -6,12 +6,15 @@ export interface Product {
   image: string;
   images: string[];
   category: string;
+  subCategory?: string;
   description: string;
   rating: number;
   reviews: number;
   badge?: string;
   discount: number;
   videoReviews?: VideoReview[];
+  gender?: 'boys' | 'girls' | 'unisex';
+  inStock?: boolean;
 }
 
 export interface VideoReview {

@@ -32,6 +32,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.discount}% OFF
             </span>
           )}
+          {product.inStock === false && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <span className="bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-full">
+                Out of Stock
+              </span>
+            </div>
+          )}
         </div>
       </Link>
 
@@ -59,15 +66,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <button
-          onClick={() => addToCart(product)}
+          onClick={() => product.inStock !== false && addToCart(product)}
+          disabled={product.inStock === false}
           className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all duration-200 ${
-            inCart
-              ? 'bg-green-100 text-green-700 hover:bg-green-200'
-              : 'btn-primary'
+            product.inStock === false
+              ? 'bg-dark-200 text-dark-400 cursor-not-allowed'
+              : inCart
+                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                : 'btn-primary'
           }`}
         >
           <ShoppingCart className="w-4 h-4" />
-          {inCart ? 'Added to Cart' : 'Add to Cart'}
+          {product.inStock === false ? 'Out of Stock' : inCart ? 'Added to Cart' : 'Add to Cart'}
         </button>
       </div>
     </div>
