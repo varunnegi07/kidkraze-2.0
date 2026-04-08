@@ -1,17 +1,53 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { ShoppingCart, Menu, X, Search, User, LogOut, Package, ChevronDown } from 'lucide-react';
+import { products } from '@/data/products';
+import { Product } from '@/types';
 
 export default function Header() {
+  const router = useRouter();
   const { getTotalItems } = useCart();
   const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
   const totalItems = getTotalItems();
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const filtered = products.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 6);
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearch = (productId: number) => {
+    setSearchOpen(false);
+    setSearchQuery('');
+    router.push(`/products/${productId}`);
+  };
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -43,9 +79,46 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button className="p-2 hover:bg-dark-100 rounded-full transition-colors">
-              <Search className="w-5 h-5 text-dark-600" />
-            </button>
+            <div className="relative" ref={searchRef}>
+              <button 
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2 hover:bg-dark-100 rounded-full transition-colors"
+              >
+                <Search className="w-5 h-5 text-dark-600" />
+              </button>
+              {searchOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-dark-100 p-3 z-50">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-dark-50 border border-dark-100 rounded-xl text-dark-900 placeholder-dark-400 focus:outline-none focus:border-primary-500"
+                      autoFocus
+                    />
+                  </div>
+                  {searchResults.length > 0 && (
+                    <div className="mt-3 border-t border-dark-100 pt-3">
+                      {searchResults.map(product => (
+                        <button
+                          key={product.id}
+                          onClick={() => handleSearch(product.id)}
+                          className="flex items-center gap-3 w-full p-2 hover:bg-dark-50 rounded-lg transition-colors text-left"
+                        >
+                          <img src={product.image} alt={product.name} className="w-10 h-10 object-cover rounded-lg" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-dark-900 truncate">{product.name}</p>
+                            <p className="text-xs text-dark-500">₹{product.price}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             <Link href="/cart" className="relative p-2 hover:bg-dark-100 rounded-full transition-colors">
               <ShoppingCart className="w-5 h-5 text-dark-600" />
