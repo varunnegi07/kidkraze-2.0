@@ -13,7 +13,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signUp: (name: string, email: string, phone: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (name: string, email: string, phone: string, password: string) => Promise<{ success: boolean; error?: string; userId?: string }>;
   signOut: () => void;
   updateProfile: (data: Partial<User>) => void;
 }
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('kidkraze-users', JSON.stringify(users));
     setUser(newUser);
     localStorage.setItem('kidkraze-user', JSON.stringify(newUser));
-    return { success: true };
+    return { success: true, userId: newUser.id };
   }, []);
 
   const signOut = useCallback(() => {

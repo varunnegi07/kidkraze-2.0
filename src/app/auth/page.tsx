@@ -39,7 +39,19 @@ export default function AuthPage() {
 
         const result = await signUp(formData.name, formData.email, formData.phone, formData.password);
         if (!result.success) { setError(result.error || 'Sign up failed'); }
-        else { router.push('/'); }
+        else {
+          fetch('/api/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              userId: result.userId,
+            }),
+          }).catch(console.error);
+          router.push('/');
+        }
       } else {
         if (!formData.email.trim()) { setError('Email is required'); setLoading(false); return; }
         if (!formData.password.trim()) { setError('Password is required'); setLoading(false); return; }

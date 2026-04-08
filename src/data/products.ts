@@ -96,15 +96,45 @@ export const products: Product[] = [
   { id: 83, name: 'Toddler Musical Matt 757-01C', price: 600, originalPrice: 799, image: img(84), images: [img(84)], category: 'toys', description: 'Musical toddler play mat with lights. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 25 },
   { id: 84, name: 'Toddler Musical Matt 757-01A', price: 600, originalPrice: 799, image: img(85), images: [img(85)], category: 'toys', description: 'Musical toddler play mat with lights. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 25 },
   { id: 85, name: 'Toddler Musical Matt 757-45', price: 760, originalPrice: 999, image: img(86), images: [img(86)], category: 'toys', description: 'Musical toddler play mat with lights and sounds. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 24 },
+
+  { id: 86, name: 'Boys Cotton T-Shirt Pack of 3', price: 399, originalPrice: 599, image: img(87), images: [img(87)], category: 'clothing', subCategory: 'boys', description: 'Comfortable cotton T-shirts for boys. Pack of 3.', rating: 4.5, reviews: 156, badge: 'Best Seller', discount: 33 },
+  { id: 87, name: 'Boys Denim Jeans', price: 649, originalPrice: 899, image: img(88), images: [img(88)], category: 'clothing', subCategory: 'boys', description: 'Stylish denim jeans for boys.', rating: 4.6, reviews: 89, badge: '', discount: 28 },
+  { id: 88, name: 'Boys Casual Shirt', price: 449, originalPrice: 649, image: img(89), images: [img(89)], category: 'clothing', subCategory: 'boys', description: 'Casual shirt for boys.', rating: 4.4, reviews: 67, badge: '', discount: 31 },
+  { id: 89, name: 'Boys Ethnic Set', price: 799, originalPrice: 1199, image: img(90), images: [img(90)], category: 'clothing', subCategory: 'boys', description: 'Traditional ethnic wear set for boys.', rating: 4.7, reviews: 112, badge: 'Popular', discount: 33 },
+  { id: 90, name: 'Boys Track Pants Pack of 2', price: 349, originalPrice: 499, image: img(91), images: [img(91)], category: 'clothing', subCategory: 'boys', description: 'Comfortable track pants. Pack of 2.', rating: 4.3, reviews: 78, badge: '', discount: 30 },
+
+  { id: 91, name: 'Girls Frock Dress', price: 549, originalPrice: 799, image: img(92), images: [img(92)], category: 'clothing', subCategory: 'girls', description: 'Beautiful frock dress for girls.', rating: 4.8, reviews: 234, badge: 'Best Seller', discount: 31 },
+  { id: 92, name: 'Girls Cotton Frocks Pack of 2', price: 499, originalPrice: 749, image: img(93), images: [img(93)], category: 'clothing', subCategory: 'girls', description: 'Cute cotton frocks. Pack of 2.', rating: 4.6, reviews: 167, badge: 'Popular', discount: 33 },
+  { id: 93, name: 'Girls Leggings', price: 249, originalPrice: 399, image: img(94), images: [img(94)], category: 'clothing', subCategory: 'girls', description: 'Soft cotton leggings for girls.', rating: 4.5, reviews: 134, badge: '', discount: 38 },
+  { id: 94, name: 'Girls Palazzo Set', price: 599, originalPrice: 899, image: img(95), images: [img(95)], category: 'clothing', subCategory: 'girls', description: 'Comfortable palazzo set for girls.', rating: 4.4, reviews: 89, badge: '', discount: 33 },
+  { id: 95, name: 'Girls Kurti Set', price: 449, originalPrice: 649, image: img(96), images: [img(96)], category: 'clothing', subCategory: 'girls', description: 'Traditional Kurti set for girls.', rating: 4.7, reviews: 178, badge: 'Hot', discount: 31 },
+  { id: 96, name: 'Girls Party Dress', price: 749, originalPrice: 1099, image: img(97), images: [img(97)], category: 'clothing', subCategory: 'girls', description: 'Fancy party dress for girls.', rating: 4.9, reviews: 145, badge: 'Premium', discount: 32 },
+
+  { id: 97, name: 'Infant Onesie Bodysuit Pack of 3', price: 299, originalPrice: 449, image: img(98), images: [img(98)], category: 'clothing', subCategory: 'infants', description: 'Soft cotton onesie bodysuits. Pack of 3.', rating: 4.7, reviews: 234, badge: 'Best Seller', discount: 33 },
+  { id: 98, name: 'Infant Full Sleeve Romper', price: 349, originalPrice: 499, image: img(99), images: [img(99)], category: 'clothing', subCategory: 'infants', description: 'Full sleeve cotton romper for infants.', rating: 4.6, reviews: 167, badge: 'Popular', discount: 30 },
+  { id: 99, name: 'Infant Baby Girl Dress', price: 399, originalPrice: 599, image: img(100), images: [img(100)], category: 'clothing', subCategory: 'infants', description: 'Cute dress for baby girls.', rating: 4.8, reviews: 189, badge: 'Hot', discount: 33 },
+  { id: 100, name: 'Infant Baby Boy Bodysuit', price: 249, originalPrice: 399, image: img(101), images: [img(101)], category: 'clothing', subCategory: 'infants', description: 'Cotton bodysuit for baby boys.', rating: 4.5, reviews: 145, badge: '', discount: 38 },
+  { id: 101, name: 'Infant Wrapped Sheet Set', price: 349, originalPrice: 499, image: img(102), images: [img(102)], category: 'clothing', subCategory: 'infants', description: 'Wrapped sheet set for infants. Pack of 2.', rating: 4.4, reviews: 112, badge: '', discount: 30 },
+  { id: 102, name: 'Infant Cap & Mitten Set', price: 199, originalPrice: 299, image: img(103), images: [img(103)], category: 'clothing', subCategory: 'infants', description: 'Protective cap and mitten set.', rating: 4.3, reviews: 89, badge: '', discount: 33 },
+
+  { id: 103, name: 'Kids Sports Shoes', price: 599, originalPrice: 899, image: img(104), images: [img(104)], category: 'clothing', subCategory: 'footwear', description: 'Comfortable sports shoes for kids.', rating: 4.6, reviews: 178, badge: 'Popular', discount: 33 },
+  { id: 104, name: 'Kids Sandals', price: 349, originalPrice: 499, image: img(105), images: [img(105)], category: 'clothing', subCategory: 'footwear', description: 'Casual sandals for kids.', rating: 4.4, reviews: 134, badge: '', discount: 30 },
+  { id: 105, name: 'Kids Bellies Slippers', price: 199, originalPrice: 299, image: img(106), images: [img(106)], category: 'clothing', subCategory: 'footwear', description: 'Comfortable bellies slippers.', rating: 4.3, reviews: 89, badge: '', discount: 33 },
+  { id: 106, name: 'Kids Formal Shoes', price: 649, originalPrice: 949, image: img(107), images: [img(107)], category: 'clothing', subCategory: 'footwear', description: 'Formal shoes for kids.', rating: 4.5, reviews: 112, badge: '', discount: 32 },
+  { id: 107, name: 'Kids Loafers', price: 549, originalPrice: 799, image: img(108), images: [img(108)], category: 'clothing', subCategory: 'footwear', description: 'Stylish loafers for kids.', rating: 4.6, reviews: 145, badge: 'Hot', discount: 31 },
+  { id: 108, name: 'Kids Rain Boots', price: 449, originalPrice: 649, image: img(109), images: [img(109)], category: 'clothing', subCategory: 'footwear', description: 'Rain boots for kids.', rating: 4.4, reviews: 78, badge: '', discount: 31 },
 ];
 
 export const categories = [
-  { id: 'new-arrivals', name: 'New Arrivals', image: img(2) },
-  { id: 'stationery', name: 'Stationery', image: img(5) },
-  { id: 'art-craft', name: 'Art & Craft', image: img(13) },
-  { id: 'accessories', name: 'Accessories', image: img(23) },
   { id: 'toys', name: 'Toys', image: img(47) },
-  { id: 'combos', name: 'Combos', image: img(28) },
+  { id: 'clothing', name: 'Clothing', image: img(1) },
+];
+
+export const clothingSubCategories = [
+  { id: 'boys', name: 'Boys', parent: 'clothing' },
+  { id: 'girls', name: 'Girls', parent: 'clothing' },
+  { id: 'infants', name: 'Infants', parent: 'clothing' },
+  { id: 'footwear', name: 'Footwear', parent: 'clothing' },
 ];
 
 export function getProductById(id: number): Product | undefined {
@@ -118,4 +148,8 @@ export function getProductsByCategory(category: string): Product[] {
 
 export function getBestSellers(): Product[] {
   return products.filter(p => p.badge === 'Best Seller' || p.rating >= 4.8).slice(0, 8);
+}
+
+export function getProductsBySubCategory(subCategory: string): Product[] {
+  return products.filter(p => p.subCategory === subCategory);
 }

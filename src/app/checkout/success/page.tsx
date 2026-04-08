@@ -2,12 +2,25 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { CheckCircle, Package, ArrowRight, Truck, Calendar } from 'lucide-react';
 import { Suspense } from 'react';
+
+function getEstimatedDelivery() {
+  const today = new Date();
+  const minDays = 3;
+  const maxDays = 7;
+  const minDate = new Date(today);
+  minDate.setDate(today.getDate() + minDays);
+  const maxDate = new Date(today);
+  maxDate.setDate(today.getDate() + maxDays);
+  const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+  return `${minDate.toLocaleDateString('en-IN', options)} - ${maxDate.toLocaleDateString('en-IN', options)}`;
+}
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
+  const estimatedDelivery = getEstimatedDelivery();
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
@@ -24,8 +37,13 @@ function SuccessContent() {
           </p>
         )}
 
+        <div className="flex items-center justify-center gap-3 p-4 bg-green-50 rounded-xl mb-4">
+          <Truck className="w-5 h-5 text-green-600" />
+          <span className="text-green-700 font-medium">Estimated Delivery: {estimatedDelivery}</span>
+        </div>
+
         <div className="flex items-center justify-center gap-3 p-4 bg-primary-50 rounded-xl mb-8">
-          <Package className="w-5 h-5 text-primary-600" />
+          <Calendar className="w-5 h-5 text-primary-600" />
           <span className="text-primary-700 font-medium">We&apos;ll send you order updates on WhatsApp</span>
         </div>
 
