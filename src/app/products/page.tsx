@@ -215,6 +215,25 @@ function ProductsContent() {
       )}
 
       {hasActiveFilters && (
+        <div className="flex items-center gap-2 mb-4 text-sm text-dark-500">
+          <span>Filtered by:</span>
+          {priceRange !== 'all' && (
+            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700">{priceLabels[priceRange]}</span>
+          )}
+          {genderFilter !== 'all' && (
+            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700 capitalize">{genderFilter}</span>
+          )}
+          {availabilityFilter !== 'all' && (
+            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700">
+              {availabilityFilter === 'inStock' ? 'In Stock' : 'Out of Stock'}
+            </span>
+          )}
+        </div>
+      )}
+
+      <span className="text-dark-500 mb-6 block">{displayProducts.length} products</span>
+
+      {displayProducts.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {displayProducts.map(product => (
             <ProductCard key={product.id} product={product} />
