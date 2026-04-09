@@ -51,11 +51,9 @@ export default function Header() {
 
   const navLinks = [
     { label: 'Home', href: '/' },
-    { label: 'New Arrivals', href: '/products?category=new-arrivals' },
+    { label: 'Shop', href: '/products' },
     { label: 'Stationery', href: '/products?category=stationery' },
-    { label: 'Art & Craft', href: '/products?category=art-craft' },
-    { label: 'Accessories', href: '/products?category=accessories' },
-    { label: 'Combos', href: '/products?category=combos' },
+    { label: 'Contact Us', href: '/contact' },
   ];
 
   return (

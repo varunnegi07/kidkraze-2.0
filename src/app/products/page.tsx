@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
-import { products, categories, clothingSubCategories, getProductsByCategory, getProductsBySubCategory } from '@/data/products';
+import { products, categories, getProductsByCategory } from '@/data/products';
 
 type PriceRange = 'all' | 'under100' | '100-500' | '500-1000' | 'above1000';
 type GenderFilter = 'all' | 'boys' | 'girls' | 'unisex';
@@ -12,9 +12,7 @@ type AvailabilityFilter = 'all' | 'inStock' | 'outOfStock';
 function ProductsContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
-  const subCategoryParam = searchParams.get('subCategory');
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || 'all');
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>(subCategoryParam || '');
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState<PriceRange>('all');
   const [genderFilter, setGenderFilter] = useState<GenderFilter>('all');
@@ -23,20 +21,12 @@ function ProductsContent() {
   useEffect(() => {
     if (categoryParam) {
       setSelectedCategory(categoryParam);
-      if (categoryParam !== 'clothing') {
-        setSelectedSubCategory('');
-      }
     }
-    if (subCategoryParam) {
-      setSelectedSubCategory(subCategoryParam);
-    }
-  }, [categoryParam, subCategoryParam]);
+  }, [categoryParam]);
 
   const filteredProducts = selectedCategory === 'all'
     ? products
-    : selectedSubCategory
-      ? getProductsBySubCategory(selectedSubCategory)
-      : getProductsByCategory(selectedCategory);
+    : getProductsByCategory(selectedCategory);
 
   const applyFilters = (productList: typeof products) => {
     return productList.filter(product => {
@@ -57,17 +47,10 @@ function ProductsContent() {
 
   const categoryTitle = selectedCategory === 'all'
     ? 'All Products'
-    : selectedSubCategory
-      ? clothingSubCategories.find(s => s.id === selectedSubCategory)?.name || 'Products'
-      : categories.find(c => c.id === selectedCategory)?.name || 'Products';
+    : categories.find(c => c.id === selectedCategory)?.name || 'Products';
 
   const handleCategoryClick = (catId: string) => {
     setSelectedCategory(catId);
-    setSelectedSubCategory('');
-  };
-
-  const handleSubCategoryClick = (subCatId: string) => {
-    setSelectedSubCategory(subCatId);
   };
 
   const clearFilters = () => {
@@ -150,133 +133,6 @@ function ProductsContent() {
           </button>
         ))}
       </div>
-
-      {selectedCategory === 'clothing' && (
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 mb-4">
-          <button
-            onClick={() => setSelectedSubCategory('')}
-            className={`flex-shrink-0 px-4 py-2 rounded-full font-medium transition-colors text-sm ${
-              selectedSubCategory === ''
-                ? 'bg-primary-600 text-white'
-                : 'bg-primary-50 text-primary-700 hover:bg-primary-100'
-            }`}
-          >
-            All Clothing
-          </button>
-          {clothingSubCategories.map(sub => (
-            <button
-              key={sub.id}
-              onClick={() => handleSubCategoryClick(sub.id)}
-              className={`flex-shrink-0 px-4 py-2 rounded-full font-medium transition-colors text-sm ${
-                selectedSubCategory === sub.id
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-primary-50 text-primary-700 hover:bg-primary-100'
-              }`}
-            >
-              {sub.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {showFilters && (
-        <div className="bg-dark-50 rounded-2xl p-6 mb-6 animate-fade-in">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <h3 className="font-semibold text-dark-900 mb-3">Price</h3>
-              <div className="flex flex-wrap gap-2">
-                {(Object.keys(priceLabels) as PriceRange[]).map((range) => (
-                  <button
-                    key={range}
-                    onClick={() => setPriceRange(range)}
-                    className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                      priceRange === range
-                        ? 'bg-dark-900 text-white'
-                        : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
-                    }`}
-                  >
-                    {priceLabels[range]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-dark-900 mb-3">Category</h3>
-              <div className="flex flex-wrap gap-2">
-                {(Object.keys(genderLabels) as GenderFilter[]).map((gender) => (
-                  <button
-                    key={gender}
-                    onClick={() => setGenderFilter(gender)}
-                    className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                      genderFilter === gender
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
-                    }`}
-                  >
-                    {genderLabels[gender]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-dark-900 mb-3">Availability</h3>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setAvailabilityFilter('all')}
-                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                    availabilityFilter === 'all'
-                      ? 'bg-dark-900 text-white'
-                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setAvailabilityFilter('inStock')}
-                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                    availabilityFilter === 'inStock'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
-                  }`}
-                >
-                  Available
-                </button>
-                <button
-                  onClick={() => setAvailabilityFilter('outOfStock')}
-                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                    availabilityFilter === 'outOfStock'
-                      ? 'bg-red-600 text-white'
-                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
-                  }`}
-                >
-                  Not Available
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {hasActiveFilters && (
-        <div className="flex items-center gap-2 mb-4 text-sm text-dark-500">
-          <span>Filtered by:</span>
-          {priceRange !== 'all' && (
-            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700">{priceLabels[priceRange]}</span>
-          )}
-          {genderFilter !== 'all' && (
-            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700 capitalize">{genderFilter}</span>
-          )}
-          {availabilityFilter !== 'all' && (
-            <span className="bg-dark-100 px-2 py-1 rounded text-dark-700">
-              {availabilityFilter === 'inStock' ? 'In Stock' : 'Out of Stock'}
-            </span>
-          )}
-        </div>
-      )}
-
-      <span className="text-dark-500 mb-6 block">{displayProducts.length} products</span>
 
       {displayProducts.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
