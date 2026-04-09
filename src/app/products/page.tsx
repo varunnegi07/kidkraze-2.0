@@ -134,7 +134,87 @@ function ProductsContent() {
         ))}
       </div>
 
-      {displayProducts.length > 0 ? (
+      {showFilters && (
+        <div className="bg-dark-50 rounded-2xl p-6 mb-6 animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h3 className="font-semibold text-dark-900 mb-3">Price</h3>
+              <div className="flex flex-wrap gap-2">
+                {(Object.keys(priceLabels) as PriceRange[]).map((range) => (
+                  <button
+                    key={range}
+                    onClick={() => setPriceRange(range)}
+                    className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                      priceRange === range
+                        ? 'bg-dark-900 text-white'
+                        : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
+                    }`}
+                  >
+                    {priceLabels[range]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-dark-900 mb-3">Category</h3>
+              <div className="flex flex-wrap gap-2">
+                {(Object.keys(genderLabels) as GenderFilter[]).map((gender) => (
+                  <button
+                    key={gender}
+                    onClick={() => setGenderFilter(gender)}
+                    className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                      genderFilter === gender
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
+                    }`}
+                  >
+                    {genderLabels[gender]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-dark-900 mb-3">Availability</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setAvailabilityFilter('all')}
+                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                    availabilityFilter === 'all'
+                      ? 'bg-dark-900 text-white'
+                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setAvailabilityFilter('inStock')}
+                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                    availabilityFilter === 'inStock'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
+                  }`}
+                >
+                  Available
+                </button>
+                <button
+                  onClick={() => setAvailabilityFilter('outOfStock')}
+                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                    availabilityFilter === 'outOfStock'
+                      ? 'bg-red-600 text-white'
+                      : 'bg-white text-dark-600 hover:bg-dark-100 border border-dark-200'
+                  }`}
+                >
+                  Not Available
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {hasActiveFilters && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {displayProducts.map(product => (
             <ProductCard key={product.id} product={product} />
