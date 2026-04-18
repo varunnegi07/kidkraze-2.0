@@ -10,6 +10,158 @@ export const videoReviews: VideoReview[] = [
 
 const img = (n: number) => `/products/IMG-20260403-WA00${String(n).padStart(2, '0')}.jpg`;
 
+function getCategoryFiles(categoryId: string): string[] {
+  const folderMap: Record<string, string> = {
+    'bookmarks': 'bookmarks and sticky notes',
+    'bottles': 'bottles and slippers ',
+    'box-trolley': 'box and trolley',
+    'discounted': 'discounted items ',
+    'erashers': 'erashers',
+    'eva-pouches': 'eva 3d pouches ',
+    'exam-boards': 'exam boards',
+    'fancy-diaries': 'fancy diaries ',
+    'fridge-magnets': 'fridge magnets',
+    'gift-sets': 'gift sets',
+    'glitter-sheets': 'glitter sheets',
+    'hair-accessories': 'hair accesories and combos',
+    'highliters': 'highliters and makers',
+    'keychains': 'keychains ',
+    'kids-tablets': 'kids tablets and lerning toycs',
+    'lamp-clock-pens': 'lamp clock pens',
+    'lunch-boxes': 'lunch boxes',
+    'mix-items': 'mix items ',
+    'office-diaries': 'office diaries',
+    'pencil-boxes': 'pencil boxes',
+    'pencils': 'pencils',
+    'pens': 'pens ',
+    'penstand': 'penstand',
+    'piggy-bank': 'piggy bank ',
+    'pouches': 'pouches',
+    'sharpners': 'sharpners ',
+    'slime-clay': 'slime and clay ',
+    'stickes': 'stickes',
+    'swimming': 'swipming essentials',
+    'tumbler': 'tumbler',
+    'umbrellas': 'umbrellas ',
+    'wash-tapes': 'wash tapes',
+  };
+  
+  const folder = folderMap[categoryId];
+  if (!folder) return [];
+  
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const dirPath = path.join(process.cwd(), 'public', 'categories', folder);
+    if (fs.existsSync(dirPath)) {
+      return fs.readdirSync(dirPath).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+    }
+  } catch {}
+  return [];
+}
+
+function generateCategoryProducts(): Product[] {
+  const newProducts: Product[] = [];
+  let productId = 86;
+  
+  const categoriesData = [
+    { id: 'bookmarks' },
+    { id: 'bottles' },
+    { id: 'box-trolley' },
+    { id: 'discounted' },
+    { id: 'erashers' },
+    { id: 'eva-pouches' },
+    { id: 'exam-boards' },
+    { id: 'fancy-diaries' },
+    { id: 'fridge-magnets' },
+    { id: 'gift-sets' },
+    { id: 'glitter-sheets' },
+    { id: 'hair-accessories' },
+    { id: 'highliters' },
+    { id: 'keychains' },
+    { id: 'kids-tablets' },
+    { id: 'lamp-clock-pens' },
+    { id: 'lunch-boxes' },
+    { id: 'mix-items' },
+    { id: 'office-diaries' },
+    { id: 'pencil-boxes' },
+    { id: 'pencils' },
+    { id: 'pens' },
+    { id: 'penstand' },
+    { id: 'piggy-bank' },
+    { id: 'pouches' },
+    { id: 'sharpners' },
+    { id: 'slime-clay' },
+    { id: 'stickes' },
+    { id: 'swimming' },
+    { id: 'tumbler' },
+    { id: 'umbrellas' },
+    { id: 'wash-tapes' },
+  ];
+  
+  for (const cat of categoriesData) {
+    const files = getCategoryFiles(cat.id);
+    
+    for (let i = 0; i < files.length; i++) {
+      const folderMap: Record<string, string> = {
+        'bookmarks': 'bookmarks and sticky notes',
+        'bottles': 'bottles and slippers ',
+        'box-trolley': 'box and trolley',
+        'discounted': 'discounted items ',
+        'erashers': 'erashers',
+        'eva-pouches': 'eva 3d pouches ',
+        'exam-boards': 'exam boards',
+        'fancy-diaries': 'fancy diaries ',
+        'fridge-magnets': 'fridge magnets',
+        'gift-sets': 'gift sets',
+        'glitter-sheets': 'glitter sheets',
+        'hair-accessories': 'hair accesories and combos',
+        'highliters': 'highliters and makers',
+        'keychains': 'keychains ',
+        'kids-tablets': 'kids tablets and lerning toycs',
+        'lamp-clock-pens': 'lamp clock pens',
+        'lunch-boxes': 'lunch boxes',
+        'mix-items': 'mix items ',
+        'office-diaries': 'office diaries',
+        'pencil-boxes': 'pencil boxes',
+        'pencils': 'pencils',
+        'pens': 'pens ',
+        'penstand': 'penstand',
+        'piggy-bank': 'piggy bank ',
+        'pouches': 'pouches',
+        'sharpners': 'sharpners ',
+        'slime-clay': 'slime and clay ',
+        'stickes': 'stickes',
+        'swimming': 'swipming essentials',
+        'tumbler': 'tumbler',
+        'umbrellas': 'umbrellas ',
+        'wash-tapes': 'wash tapes',
+      };
+      
+      const price = Math.floor(Math.random() * 500) + 50;
+      const originalPrice = Math.floor(price * 1.3);
+      const discount = Math.floor(((originalPrice - price) / originalPrice) * 100);
+      
+      newProducts.push({
+        id: productId++,
+        name: `${cat.id.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} ${i + 1}`,
+        price,
+        originalPrice,
+        image: `/categories/${folderMap[cat.id]}/${files[i]}`,
+        images: [`/categories/${folderMap[cat.id]}/${files[i]}`],
+        category: cat.id,
+        description: `High quality ${cat.id.replace('-', ' ')}. Perfect for kids and daily use.`,
+        rating: 4 + Math.random(),
+        reviews: Math.floor(Math.random() * 100) + 10,
+        badge: i === 0 ? 'New' : '',
+        discount,
+      });
+    }
+  }
+  
+  return newProducts;
+}
+
 export const products: Product[] = [
   { id: 1, name: 'Stress Relief Ball', price: 30, originalPrice: 45, image: img(2), images: [img(2)], category: 'toys', description: 'Soft squeeze stress relief ball. Pack of 12.', rating: 4.3, reviews: 45, badge: '', discount: 33 },
   { id: 2, name: 'Toddler Matt 757-61', price: 720, originalPrice: 950, image: img(3), images: [img(3)], category: 'toys', description: 'Musical toddler play mat. Set of 2.', rating: 4.7, reviews: 89, badge: 'Popular', discount: 24 },
@@ -96,6 +248,7 @@ export const products: Product[] = [
   { id: 83, name: 'Toddler Musical Matt 757-01C', price: 600, originalPrice: 799, image: img(84), images: [img(84)], category: 'toys', description: 'Musical toddler play mat with lights. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 25 },
   { id: 84, name: 'Toddler Musical Matt 757-01A', price: 600, originalPrice: 799, image: img(85), images: [img(85)], category: 'toys', description: 'Musical toddler play mat with lights. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 25 },
   { id: 85, name: 'Toddler Musical Matt 757-45', price: 760, originalPrice: 999, image: img(86), images: [img(86)], category: 'toys', description: 'Musical toddler play mat with lights and sounds. Set of 2.', rating: 4.7, reviews: 89, badge: '', discount: 24 },
+  ...generateCategoryProducts(),
 ];
 
 export const categories = [
