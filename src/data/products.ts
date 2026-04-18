@@ -1389,7 +1389,6 @@ export const products: Product[] = [
 
 export const categories = [
   { id: 'toys', name: 'Toys', image: '/products/IMG-20260403-WA0002.jpg' },
-  { id: 'stationery', name: 'Stationery', image: '/products/IMG-20260403-WA0005.jpg' },
   { id: 'bookmarks-and-sticky-notes', name: 'Bookmarks and sticky notes', image: '/categories/bookmarks and sticky notes/WhatsApp Image 2026-04-18 at 12.59.54.jpeg' },
   { id: 'bottles-and-slippers', name: 'Bottles and slippers', image: '/categories/bottles and slippers /-OFgYGzgbq4GZ0Cn5S-b.jpg' },
   { id: 'box-and-trolley', name: 'Box and trolley', image: '/categories/box and trolley/WhatsApp Image 2026-04-18 at 13.22.40.jpeg' },
