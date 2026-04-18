@@ -49,8 +49,8 @@ function ProductsContent() {
     ? 'All Products'
     : categories.find(c => c.id === selectedCategory)?.name || 'Products';
 
-  const handleCategoryClick = (catId: string) => {
-    setSelectedCategory(catId);
+  const handleCategoryClick = (catId: string | number) => {
+    setSelectedCategory(String(catId));
   };
 
   const clearFilters = () => {
