@@ -122,7 +122,7 @@ function ProductsContent() {
         {categories.map(cat => (
           <button
             key={cat.id}
-            onClick={() => handleCategoryClick(cat.id)}
+            onClick={() => handleCategoryClick(String(cat.id))}
             className={`flex-shrink-0 px-5 py-2 rounded-full font-medium transition-colors ${
               selectedCategory === cat.id
                 ? 'bg-dark-900 text-white'
