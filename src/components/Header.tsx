@@ -52,7 +52,6 @@ export default function Header() {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/products' },
-    { label: 'Stationery', href: '/products?category=stationery' },
     { label: 'Contact Us', href: '/contact' },
   ];
 
