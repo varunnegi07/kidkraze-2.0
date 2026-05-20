@@ -10,7 +10,7 @@ export default function Footer() {
             <Link href="/" className="mb-4 block">
               <img src="/logo.png" alt="KidKraze" className="h-12 w-auto brightness-0 invert" />
             </Link>
-            <p className="text-dark-400 mb-6">
+            <p className="text-dark-400 mb-6">          
               Fancy Stationery, Gifts, Novelties & School Books
             </p>
             <div className="flex gap-4">
@@ -20,7 +20,7 @@ export default function Footer() {
               <a href="https://wa.me/917889231302" target="_blank" rel="noopener noreferrer" className="p-2 bg-dark-800 hover:bg-green-600 rounded-full transition-colors">
                 <MessageCircle className="w-5 h-5" />
               </a>
-              <a href="mailto:contact@kidkraze.com" className="p-2 bg-dark-800 hover:bg-primary-600 rounded-full transition-colors">
+              <a href="mailto:kidkrazemall@gmail.com" className="p-2 bg-dark-800 hover:bg-primary-600 rounded-full transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
             </div>
