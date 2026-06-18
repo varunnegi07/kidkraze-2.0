@@ -18,7 +18,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="font-medium text-dark-900">Phone</p>
-                <p className="text-dark-500">+91 98765 43210</p>
+                <p className="text-dark-500">+91 78892 31302</p>
               </div>
             </div>
             
@@ -48,7 +48,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="font-medium text-dark-900">WhatsApp</p>
-                <p className="text-dark-500">Chat with us on WhatsApp</p>
+                <a href="https://wa.me/917889231302" target="_blank" rel="noopener noreferrer" className="text-dark-500 hover:text-green-600 transition-colors">Chat with us on WhatsApp</a>
               </div>
             </div>
           </div>
