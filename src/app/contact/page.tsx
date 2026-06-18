@@ -1,8 +1,22 @@
 'use client';
 
+import { useState, type FormEvent } from 'react';
 import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 
 export default function ContactPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const text = encodeURIComponent(
+      `*New Inquiry from KidKraze Website*\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Message:* ${message}`
+    );
+    window.open(`https://wa.me/917889231302?text=${text}`, '_blank');
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl md:text-4xl font-bold text-dark-900 mb-8 text-center">Contact Us</h1>
@@ -57,11 +71,14 @@ export default function ContactPage() {
         <div className="bg-white rounded-2xl p-8 shadow-sm border border-dark-100">
           <h2 className="text-xl font-semibold text-dark-900 mb-6">Send us a Message</h2>
           
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <input
                 type="text"
                 placeholder="Your Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-dark-50 border border-dark-100 rounded-xl text-dark-900 placeholder-dark-400 focus:outline-none focus:border-primary-500"
               />
             </div>
@@ -70,6 +87,9 @@ export default function ContactPage() {
               <input
                 type="email"
                 placeholder="Your Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-dark-50 border border-dark-100 rounded-xl text-dark-900 placeholder-dark-400 focus:outline-none focus:border-primary-500"
               />
             </div>
@@ -78,6 +98,9 @@ export default function ContactPage() {
               <input
                 type="tel"
                 placeholder="Your Phone Number"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-dark-50 border border-dark-100 rounded-xl text-dark-900 placeholder-dark-400 focus:outline-none focus:border-primary-500"
               />
             </div>
@@ -86,6 +109,9 @@ export default function ContactPage() {
               <textarea
                 rows={4}
                 placeholder="Your Message"
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-dark-50 border border-dark-100 rounded-xl text-dark-900 placeholder-dark-400 focus:outline-none focus:border-primary-500 resize-none"
               />
             </div>
